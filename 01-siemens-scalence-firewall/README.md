@@ -1,160 +1,100 @@
-# 01 – Siemens SCALANCE SC646-2C ICS Segmentation
+Infrastructure Build Guide: Bare-Metal Siemens SCALANCE ICS Firewall
 
-*Provision an industrial firewall, configure Inter-VLAN bridging for Modbus TCP, and engineer a native Syslog telemetry pipeline.*
+A visual guide documenting the hardware inspection, network segmentation, and native SOC telemetry integration of an industrial perimeter firewall.
 
----
+Overview
 
-## Overview
+This guide provides a comprehensive visual narrative of configuring a Siemens SCALANCE SC646-2C Industrial Firewall. It follows the end-to-end engineering workflow, starting from analyzing physical enterprise OT hardware, utilizing Layer 2 discovery for initial provisioning, configuring Inter-VLAN bridging for Modbus TCP, and culminating in a custom "Living off the Land" PowerShell SIEM pipeline.
 
-This lab documents the hands-on inspection of enterprise Operational Technology (OT) hardware and the end-to-end network configuration of a Siemens SCALANCE SC646-2C Industrial Firewall.
+Workflow Steps
 
-The configuration simulates the role of "FW5" in a segmented Industrial Control System (ICS) architecture. FW5 acts as the security boundary between an internal Plant Bus (core process automation network) and external/Third-Party systems, specifically configured to facilitate secure Modbus TCP communications.
+1. OT Hardware Immersion & Architecture
 
----
+Before deploying the network logic, a physical inspection of the surrounding enterprise infrastructure was conducted to understand hardware-level fault tolerance. This included analyzing Cisco Secure Firewalls, Cisco SF300 Managed Switches, Fortinet gateways, and extracting modular components like cooling fans and solid-state drives from the chassis.
 
-## 🛠️ Phase 1: OT Hardware Immersion & Tinkering
-
-Before deploying the network logic, I conducted a physical inspection and teardown of surrounding enterprise infrastructure in the lab to understand the physical resilience and architecture of OT devices.
-
-**Hardware Analyzed:**
-
-* **Power Supply:** Weidmüller PROeco (Model 1469510000 | 480W 24V 20A) - Physically wired to the Siemens Firewall (L1+ Red / M1 Black).
-* **Switches:** Cisco SF300-24P (24-Port 10/100 PoE Managed Switch) & Advantech EKI-9226G Industrial Switch.
-* **Firewalls:** Cisco Secure Firewall (w/ NM1 & NM2 modules) & Fortinet enterprise gateways.
-* **Peripherals:** Black Box 4K HDMI Dual-Head KVM Ext Receiver (KVXLCH-200-RX).
-
-> **Note:** Tinkered with the physical chassis of these devices, extracting and inspecting modular cooling fan assemblies, solid-state drives (SSDs), and redundant power rails to understand hardware-level fault tolerance.
-
----
-
-## 🏗️ Phase 2: Bare-Metal Provisioning & Discovery
-
-The core firewall for this deployment was the Siemens SCALANCE SC646-2C.
-
-* **Initial Boot:** Out of the box, the firewall possessed a factory default IP of 0.0.0.0.
-* **Layer 2 Discovery:** Because the device had no routable IP, standard web/SSH access was impossible. I utilized Siemens PRONETA (a proprietary Layer 2 network analysis tool) to detect the MAC address (74-FC-45-47-84-62) on the local wire and assign an initial IP address of 192.168.70.203 with a /24 subnet mask.
-
----
-
-## ⚙️ Phase 3: Subnet Troubleshooting & Connectivity
-
-To configure the firewall, two engineering laptops were connected via ethernet to ports P1 and P4.
-
-**The Subnet Mismatch Issue:**
-Initially, my laptop failed to establish a connection. `ipconfig` revealed my NIC had self-assigned an APIPA address (169.254.x.x).
-
-**Resolution:**
-Navigated to Windows Control Panel > Network Adapters and statically assigned my IPv4 address to 192.168.70.93 (Subnet 255.255.255.0). This placed my machine in the same broadcast domain as the firewall, immediately resolving the ICMP ping failures.
-
----
-
-## 🛡️ Phase 4: Network Segmentation & IP Services
-
-Logged into the SCALANCE Web GUI to architect the ICS boundary:
-
-* **SNMP Configuration:** Enabled SNMP V1/V2/V3 for diagnostic monitoring across the plant bus.
-* **VLAN Segmentation:**
-* Created **VLAN 1 (INT)** for the internal automation network.
-* Created **VLAN 2 (EXT)** for third-party external networks.
+Cisco & Fortinet Enterprise Hardware Inspection:
 
 
-* **Inter-VLAN Bridge:** Enabled bridging to allow controlled, stateful routing between the internal and external segments.
-* **Industrial Protocol Rules:**
-* Authorized **Modbus-TCP** (Transport: TCP, Dest Port: 502) to allow external systems to read/write specific PLC registers.
-* Authorized **S7** communications (Port 102).
-* Enabled **ICMP** (Echo Request Type 8) for network diagnostic testing.
+Extracting Modular Controller Assemblies:
 
 
+The firewall itself was powered via a bare-metal Weidmüller PROeco 480W 24V power supply, physically wired directly into the SCALANCE L1+ and M1 terminals.
 
----
+Weidmüller PROeco 24V Power Delivery:
 
-## 🧪 Phase 5: Stateful Firewall Rule Testing
 
-To validate the security boundaries, we wrote specific IPv4 rules between VLAN 1 and VLAN 2 and observed the packet-level behavior via Windows Command Prompt.
+2. Layer 2 Discovery and Provisioning
 
-### Test 1: Action = ACCEPT
+Out of the box, the SCALANCE firewall lacked a routable IP address (defaulted to 0.0.0.0), rendering standard web/SSH access impossible. We utilized Siemens PRONETA, a proprietary Layer 2 network analysis tool, to discover the device's MAC address directly on the wire and assign its initial IPv4 address (192.168.70.203/24).
 
-Traffic passes freely between the engineering station and the firewall.
+Siemens PRONETA Initial IP Provisioning:
 
-```text
-C:\Users\Intern>ping 192.168.70.93
-Reply from 192.168.70.93: bytes=32 time=2ms TTL=128
-Reply from 192.168.70.93: bytes=32 time=1ms TTL=128
 
-```
+3. Engineering Workstation & Subnet Troubleshooting
 
-### Test 2: Action = DROP (Stealth Mode)
+To configure the firewall, two engineering laptops were connected via ethernet to ports P1 and P4. Initially, connectivity failed due to a subnet mismatch; the Windows NIC self-assigned an APIPA address (169.254.x.x).
 
-The firewall rule was changed to DROP. The SCALANCE firewall silently discards the ICMP packets without notifying the sender. This is the ICS best practice to prevent network scanning/reconnaissance.
+We resolved this by manually accessing the Windows Network Adapters and statically assigning an IPv4 address (192.168.70.93/24) to place the workstation in the exact broadcast domain as the firewall.
 
-```text
-C:\Users\Intern>ping 192.168.70.22 -t
-Request timed out.
-Request timed out.
+Static IPv4 Assignment for OT Subnet Sync:
 
-```
 
-### Test 3: Action = REJECT (Active Refusal)
+Live Lab Configuration Environment:
 
-The firewall rule was changed to REJECT. Instead of silently dropping the packet, the firewall actively sends an ICMP error message back to the sender, confirming the host exists but is actively blocking the port.
 
-```text
-C:\Users\Intern>ping 192.168.70.22 -t
-Reply from 192.168.70.203: Destination port unreachable.
+4. Network Segmentation (VLANs & Bridging)
 
-```
+With connectivity established, we accessed the SCALANCE Web GUI to architect the ICS boundary. We segmented the network into VLAN 1 (INT) representing the internal Plant Bus, and VLAN 2 (EXT) representing external third-party systems.
 
----
+Port-Based VLAN Configuration:
 
-## 📡 Phase 6: Local SOC Telemetry & Native SIEM Integration
 
-A firewall is only effective if its logs are actively monitored. Due to corporate restrictions preventing the installation of third-party software (like Wireshark or Tftpd64), I engineered a "Living off the Land" SIEM solution to capture live telemetry.
+To allow controlled, stateful routing between the internal and external segments, Inter-VLAN bridging was configured and assigned to the respective interfaces.
 
-### 1. Firewall Syslog Configuration
+Inter-VLAN Bridge Activation:
 
-* Navigated to the SCALANCE Web Manager (192.168.2.205).
-* Enabled the Syslog Client under **System > Events**.
-* Configured the firewall to forward Security, Firewall, and Fault logs to the engineering laptop's IP (192.168.2.200) over UDP Port 5514.
 
-### 2. The Native PowerShell Listener
+5. Industrial Protocol Security Policies
 
-Using native Windows PowerShell, I built a UDP listener to capture, parse, and display the raw Syslog events in real-time.
+The primary role of "FW5" is to secure specific industrial communications while blocking everything else. We configured specific IP Services to authorize Modbus-TCP (Port 502) and S7 (Port 102) traffic, along with ICMP for diagnostics.
 
-```powershell
-$Port = 5514
-$Endpoint = New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any, $Port)
-$UDPClient = New-Object System.Net.Sockets.UdpClient($Port)
-Write-Host "Listening on UDP $Port"
+Defining Modbus TCP & S7 IP Services:
 
-while ($true) {
-    $Bytes = $UDPClient.Receive([ref]$Endpoint)
-    $Message = [Text.Encoding]::UTF8.GetString($Bytes)
-    Write-Host "$(Get-Date) | $($Endpoint.Address)"
-    Write-Host $Message
-}
 
-```
+Enforcing Stateful IP Rules Across VLANs:
 
-### 3. Validating the Telemetry
 
-By generating unauthorized traffic that triggered the firewall's DROP rules, the PowerShell script successfully captured the raw intrusion events, verifying that the OT telemetry pipeline was fully operational.
+6. Packet-State Validation (ACCEPT vs. DROP vs. REJECT)
 
-```text
-07/03/2026 17:06:19 | 192.168.2.205
-<132>1 2000-09-09T13:44:27+00:00 - 6GK5646-2GS00-2AC2 11 - [meta sysUpTime="2383200"] DROP(3) in:vlan2 out:vlan1 len:64 
-s-mac:E4:B9:7A:72:97:42 d-mac:01:00:5E:7F:FF:FA 
-s-ip:192.168.1.100 d-ip:239.255.255.250 
-udp:50711->3702
+To validate the security boundaries, we manipulated the IP rules and observed the exact packet-level responses via the Windows Command Prompt.
 
-```
+When the rule was set to ACCEPT, ICMP echoes passed seamlessly across the VLANs.
 
----
 
-## Contact
+When the rule was changed to DROP, the firewall silently discarded the packets, resulting in standard timeouts. This is the ICS best practice (stealth mode) to prevent network reconnaissance.
 
-**Paarth Pandey**
-[LinkedIn](https://www.linkedin.com) | [GitHub](https://github.com) | paarthdxb@gmail.com
 
-> Author: Paarth Pandey
->
-> Open-Source Contributions Portfolio
+When the rule was changed to REJECT, the firewall actively denied the connection, sending a Destination port unreachable ICMP error back to the workstation.
+
+
+7. Local SOC Telemetry & Native SIEM Integration
+
+Because corporate restrictions prevented the installation of third-party packet analyzers (like Wireshark or Tftpd64), we engineered a "Living off the Land" telemetry pipeline. We configured the SCALANCE Syslog Client to forward all security and fault logs directly to the engineering laptop (UDP Port 5514).
+
+SCALANCE Syslog Client Configuration:
+
+
+We then wrote a native Windows PowerShell script to act as a UDP listener. This allowed us to capture, parse, and monitor raw intrusion events (such as firewall DROP actions) in real-time natively on the workstation.
+
+Real-Time Native PowerShell Syslog Capture:
+
+
+Contact
+
+For any questions or feedback, reach out:
+
+Paarth Pandey LinkedIn | GitHub | paarthdxb@gmail.com
+
+Author: Paarth Pandey
+
+OT Security Labs: Industrial Network Defense
