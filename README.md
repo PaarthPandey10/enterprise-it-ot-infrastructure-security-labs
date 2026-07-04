@@ -103,6 +103,6 @@ Screenshots and command flows are reused respectfully for learning and documenta
 ---
 > Author: Paarth Pandey
 >
-> OT Security & ICS Networking Labs
+> OT Security Labs: Industrial Network Defense
 
 
