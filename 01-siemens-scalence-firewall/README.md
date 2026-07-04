@@ -8,7 +8,7 @@
 
 This lab involves the bare-metal provisioning and network configuration of a Siemens SCALANCE SC646-2C Industrial Firewall. It simulates the deployment of "FW5," a critical security boundary facilitating controlled Modbus TCP communication between an internal Plant Bus and Third-Party External Systems.
 
-📄 **Full Walkthrough:** For the complete, step-by-step visual configuration and packet validation, see the Infrastructure Build Guide.
+📄 **Full Walkthrough:** For the complete, step-by-step visual configuration and packet validation, see the [Infrastructure Build Guide](./01-build-guide.md)
 
 ---
 
