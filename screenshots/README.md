@@ -6,7 +6,7 @@
 
 ## Overview
 
-This folder serves as the unified media repository for the entire project. To maintain a clean directory structure, all individual lab folders (e.g., `01-siemens-scalance-firewall`, `02-cisco-secure-firewall-3100`) reference images stored here using relative paths.
+This folder serves as the unified media repository for the entire project. To maintain a clean directory structure, all individual lab folders reference images stored here using relative paths.
 
 ---
 
