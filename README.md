@@ -1,111 +1,70 @@
-# OT Security & ICS Network Defense Labs
+# Enterprise IT/OT Infrastructure & Network Security Labs
 
-Hands-on Operational Technology (OT) and Enterprise IT assignments — configuring enterprise-grade industrial firewalls, multilayer switches, and bare-metal infrastructure.
-
-## Table of Contents
-
-* [About](#about)
-* [Usage / How to Use](#usage--how-to-use)
-* [Features / Highlights](#features--highlights)
-* [Technologies Used](#technologies-used)
-* [Contributing](#contributing)
-* [License](#license)
-* [Contact](#contact)
+Hands-on hybrid Operational Technology (OT) and Enterprise IT engineering portfolios — configuring enterprise-grade industrial firewalls, managed multilayer switches, security fabrics, and bare-metal hardware.
 
 ---
 
-## About
-
-This repository contains real-world hardware and network security assignments completed while working with physical enterprise infrastructure.
-
-Each lab explores the configuration, segmentation, and defense of network boundaries using equipment from Siemens, Cisco, Fortinet, and Advantech. The focus is on bridging the gap between theoretical network design and the harsh realities of physical silicon deployment.
-
----
-
-## Project Structure
-
+## Folder Structure 
 ```
-ot-security-and-ics-network-labs/
+enterprise-it-ot-infrastructure-security-labs/
 ├── screenshots/
 ├── 01-siemens-scalance-firewall/
-│   ├──  01-build-guide.md
-│   └── README.md
-├── 02-cisco-sf300-l3-multilayer-architecture/
-│   ├──  02-build-guide.md
-│   └── README.md
-└── LICENSE
+│   ├── README.md
+│   ├── 01-lab-setup.md
+│   ├── 02-firewall-config.md
+│   ├── 03-modbus-filtering.md
+│   └── 04-s7-filtering.md
+├── 02-cisco-sf300-hardened-edge-fabric/
+│   ├── README.md
+│   ├── 2.1-inter-vlan-routing/
+│   │   ├── 2.1-build-guide.md
+│   │   └── README.md
+│   ├── 2.2-stateless-access-control/
+│   │   ├── 2.2-build-guide.md
+│   │   └── README.md
+│   ├── 2.3-dhcp-infrastructure-automation/
+│   │   ├── 2.3-build-guide.md
+│   │   └── README.md
+│   ├── 2.4-anti-spoofing-fabric/
+│   │   ├── 2.4-build-guide.md
+│   │   └── README.md
+│   ├── 2.5-stp-loop-prevention/
+│   │   ├── 2.5-build-guide.md
+│   │   └── README.md
+│   └── 2.6-advanced-qos-secure-snmpv3/
+│       ├── 2.6-build-guide.md
+│       └── README.md
+├── LICENSE
+└── README.md
 ```
+    
+---
+
+## Portfolio Architecture
+
+This repository is organized by hardware vendor and functional security domain, ranging from industrial protocol filtering to enterprise-grade L3 routing and telemetry.
+
+## Hardware Portfolio Highlights
+
+* **OT/ICS Boundary Defense:** Provisioned Siemens SCALANCE firewalls to perform deep packet inspection on industrial protocols, specifically filtering Modbus/TCP and S7 traffic to protect PLC environments.
+* **Multi-VLAN L3 Core & Routing Engine:** Leveraged physical Cisco silicon to route and segment traffic at wire speed across distinct broadcast domains.
+* **Control Plane Hardening & Cryptographic Bypass:** Intercepted legacy 2010-era switch SSH control planes by forcing modern OpenSSH clients to negotiate legacy Key Exchanges and Ciphers. Pivoted to zero-crypto OOB serial debugging to bypass CPU exhaustion locks.
+* **Defensive Boundary Fabrics:** Deployed wire-speed hardware validation using IP Source Guard (IPSG), DHCP Snooping, and Dynamic ARP Inspection (DAI) to defeat spoofing and MITM attacks.
+* **Secure Industrial Monitoring:** Engineered local "Living off the Land" SNMPv3 User Security Model (USM) profiles implementing SHA/DES authentication and encryption contexts.
 
 ---
 
-## Usage / How to Use
+## Technologies & Equipment Used
 
-Each folder contains a lab with:
-
-* Summary of the objective
-* Key concepts or OT services used
-* PowerShell scripts, architecture logic, or configuration notes
-
-> **Note:** All visual documentation, topology diagrams, and command-line outputs are stored in the centralized `screenshots/` directory.
-
-Start from **Lab 01** to follow the progression from basic industrial boundary setup, moving to **Lab 02** for core multilayer switching and control plane debugging.
+* **Hardware:** Cisco SF300-24P, Siemens SCALANCE SC646-2C, Cisco Secure Firewall 3100, Dell Precision 7560 Engineering Workstation
+* **Software & Tooling:** Wireshark Foundation (Cryptographic Negotiation & Packet Analysis), Paessler SNMP Tester, Siemens PRONETA, PuTTY (OOB Serial Console), Windows PowerShell
+* **Key Protocols:** SNMPv3 (AuthPriv), DSCP/CoS, RSTP (802.1w), DHCP Snooping, Dynamic ARP Inspection (DAI), IP Source Guard (IPSG), IPv4 Static/Inter-VLAN Routing, Modbus/TCP, S7
 
 ---
 
-## Features / Highlights
-
-* Provisioned bare-metal firewall and switch hardware.
-* Bypassed legacy cryptography deprecation using OpenSSH override flags.
-* Diagnosed hardware control plane exhaustion and established Out-of-Band (OOB) serial management.
-* Configured Industrial and Enterprise Port-Based VLANs.
-* Routed and secured protocols across ASIC hardware backplanes.
-* Engineered local "Living off the Land" SOC telemetry pipelines using Syslog and native PowerShell.
-
----
-
-## Technologies Used
-
-* **Hardware:** Siemens SCALANCE SC646-2C, Cisco Secure Firewall 3100, Cisco SF300-24P Switch, Weidmüller PROeco Power Supply
-* **Software & Tools:** Siemens PRONETA, Windows PowerShell, PuTTY (Serial/OOB)
-* **Protocols/Concepts:** Modbus TCP, S7, ICMP, Syslog, IPv4, Inter-VLAN Routing, SVI Autostate, OpenSSH Cryptography
-
----
-
-## Contributing
-
-Not open for contributions — personal practice lab and hardware portfolio showcase.
-
----
-
-## License
-
-This project is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
-
-**You are free to:**
-
-* **Share** — copy and redistribute the material in any medium or format
-* **Adapt** — remix, transform, and build upon the material for any purpose, even commercially
-
-**Under the following terms:**
-
-* **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
-
-🔗 [View License](https://creativecommons.org/licenses/by/4.0/)
-
----
-
-## Contact
+## Contact & Credits
 
 **Paarth Pandey**
 [LinkedIn](https://www.linkedin.com) | [GitHub](https://github.com) | paarthdxb@gmail.com
 
----
-
-*Note: All labs in this repository are based on hands-on engineering work with physical Operational Technology (OT) and IT hardware. Screenshots and command flows are reused respectfully for learning and documentation purposes only.*
-
----
-> Author: Paarth Pandey
->
-> OT Security Labs: Industrial Network Defense
-
-
+*Note: All portfolios are compiled from actual hands-on engineering lab environments utilizing physical hardware. Visual documentation, topology diagrams, and command-line outputs are provided for learning and portfolio demonstration purposes.*
