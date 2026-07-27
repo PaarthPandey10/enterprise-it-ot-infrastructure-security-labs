@@ -54,7 +54,6 @@ enterprise-it-ot-infrastructure-security-labs/
 ├── LICENSE
 ├── README.md
 └── screenshots/
-    └── [Visual documentation, FDM UI captures, and hardware console evidence files]
 ```
 
 This repository is organized by hardware vendor and functional security domain, ranging from industrial protocol filtering to enterprise-grade L3 routing, deep packet inspection, and cryptographic decryption.
