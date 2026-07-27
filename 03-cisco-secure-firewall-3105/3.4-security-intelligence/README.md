@@ -1,4 +1,4 @@
-# Project 3.4 – Security Intelligence (SI) Engine Configuration & Custom Feed Blacklisting
+# 3.4 – Security Intelligence (SI) Engine Configuration & Custom Feed Blacklisting
 
 *Deploy the Security Intelligence engine, bypass air-gapped threat feed constraints using custom object instantiation, and validate absolute early-stage ingress drops.*
 

@@ -1,4 +1,4 @@
-# Project 3.3 – Snort 3 Intrusion Prevention System (IPS) Integration & Validation
+# 3.3 – Snort 3 Intrusion Prevention System (IPS) Integration & Validation
 
 *Deploy the Cisco Snort 3 engine, bind Talos intelligence to permissive access rules, and validate protocol preprocessing through simulated network attacks.*
 

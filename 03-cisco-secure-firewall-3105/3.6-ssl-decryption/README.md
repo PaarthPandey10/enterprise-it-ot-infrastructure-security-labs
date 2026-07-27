@@ -1,4 +1,4 @@
-# Project 3.6 – Cryptographic Man-in-the-Middle (MitM) & SSL Decryption
+# 3.6 – Cryptographic Man-in-the-Middle (MitM) & SSL Decryption
 
 *Generate an internal Certificate Authority, inject OS-level cryptographic trust, and deploy a Decrypt-Resign architecture to inspect TLS-encrypted payloads.*
 

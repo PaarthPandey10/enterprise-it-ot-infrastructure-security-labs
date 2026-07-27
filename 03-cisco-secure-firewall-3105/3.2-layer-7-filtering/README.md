@@ -1,4 +1,4 @@
-# Project 3.2 – Layer 7 Application Control & URL Categorization Engine
+# 3.2 – Layer 7 Application Control & URL Categorization Engine
 
 *Enable subscription licensing, prime the Snort engine for Deep Packet Inspection (DPI), and engineer granular Layer 7 payload drops while troubleshooting top-down access matrix logic.*
 
