@@ -1,4 +1,4 @@
-# Project 3.1.6 – FTD Ingress Routing & Access Control Specificity
+# Project 3.1 – FTD Ingress Routing & Access Control Specificity
 
 *Troubleshoot ambiguous drop logic, define explicit network objects, and validate targeted security policy injection on a Cisco Secure Firewall 3105.*
 
